@@ -130,7 +130,9 @@ fun FeedScreen(
     topics: List<Topic>,
     selectedTopic: Topic?,
     savedLinks: Set<String>,
+    savingLinks: Set<String>,
     showSaved: Boolean,
+    hasMore: Boolean,
     loading: Boolean,
     translating: Boolean,
     failed: List<String>,
@@ -139,6 +141,7 @@ fun FeedScreen(
     onOpenArticle: (Article) -> Unit,
     onToggleSave: (Article) -> Unit,
     onShowSaved: (Boolean) -> Unit,
+    onLoadMore: () -> Unit,
     onRefresh: () -> Unit,
     onOpenSources: () -> Unit
 ) {
@@ -209,14 +212,37 @@ fun FeedScreen(
                         ArticleRow(
                             article = article,
                             saved = article.link in savedLinks,
+                            saving = article.link in savingLinks,
                             onClick = { onOpenArticle(article) },
                             onToggleSave = { onToggleSave(article) }
                         )
                         HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
                     }
+                    if (hasMore) {
+                        item(key = "load-more") {
+                            LoadMoreRow(onLoadMore)
+                        }
+                    }
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun LoadMoreRow(onLoadMore: () -> Unit) {
+    Box(
+        Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onLoadMore)
+            .padding(20.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            "Carica altre notizie",
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.primary
+        )
     }
 }
 
@@ -312,6 +338,7 @@ private fun EmptySaved() {
 private fun ArticleRow(
     article: Article,
     saved: Boolean,
+    saving: Boolean,
     onClick: () -> Unit,
     onToggleSave: () -> Unit
 ) {
@@ -371,13 +398,23 @@ private fun ArticleRow(
             )
         }
       }
-      IconButton(onClick = onToggleSave) {
-          Icon(
-              if (saved) Icons.Filled.Bookmark else Icons.Filled.BookmarkBorder,
-              contentDescription = if (saved) "Togli dai salvati" else "Scarica e salva",
-              tint = if (saved) MaterialTheme.colorScheme.primary
-              else MaterialTheme.colorScheme.outlineVariant
-          )
+      if (saving) {
+          Box(Modifier.width(48.dp).height(48.dp), contentAlignment = Alignment.Center) {
+              CircularProgressIndicator(
+                  Modifier.width(18.dp).height(18.dp),
+                  strokeWidth = 2.dp,
+                  color = MaterialTheme.colorScheme.primary
+              )
+          }
+      } else {
+          IconButton(onClick = onToggleSave) {
+              Icon(
+                  if (saved) Icons.Filled.Bookmark else Icons.Filled.BookmarkBorder,
+                  contentDescription = if (saved) "Togli dai salvati" else "Scarica e salva",
+                  tint = if (saved) MaterialTheme.colorScheme.primary
+                  else MaterialTheme.colorScheme.outlineVariant
+              )
+          }
       }
     }
 }
@@ -622,4 +659,3 @@ private fun relativeTime(time: Long): String = DateUtils.getRelativeTimeSpanStri
     System.currentTimeMillis(),
     DateUtils.MINUTE_IN_MILLIS
 ).toString()
-
