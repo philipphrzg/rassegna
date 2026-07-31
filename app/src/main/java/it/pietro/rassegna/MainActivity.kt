@@ -86,11 +86,13 @@ private fun AppRoot(vm: NewsViewModel = viewModel()) {
         )
 
         else -> FeedScreen(
-            articles = state.visibleArticles,
+            articles = state.displayedArticles,
             topics = state.availableTopics,
             selectedTopic = state.topic,
             savedLinks = state.savedLinks,
+            savingLinks = state.savingLinks,
             showSaved = state.showSaved,
+            hasMore = state.hasMore,
             loading = state.loading,
             translating = state.translating,
             failed = state.failedSources,
@@ -99,6 +101,7 @@ private fun AppRoot(vm: NewsViewModel = viewModel()) {
             onOpenArticle = vm::openArticle,
             onToggleSave = vm::toggleSaveFromList,
             onShowSaved = vm::showSaved,
+            onLoadMore = vm::loadMore,
             onRefresh = vm::refresh,
             onOpenSources = { showSources = true }
         )
