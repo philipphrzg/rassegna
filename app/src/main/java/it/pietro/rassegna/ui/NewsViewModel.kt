@@ -320,3 +320,53 @@ class NewsViewModel(app: Application) : AndroidViewModel(app) {
                     chunk.map { article ->
                         article.link to Pair(
                             Translator.translate(article.title, article.lang),
+                            Translator.translate(article.summary, article.lang)
+                        )
+                    }.toMap()
+                }
+                _state.value = _state.value.copy(
+                    articles = _state.value.articles.map { article ->
+                        val t = done[article.link]
+                        if (t == null) {
+                            article
+                        } else {
+                            val translated = article.copy(titleIt = t.first, summaryIt = t.second)
+                            if (article.topic == Topic.ALTRO) {
+                                translated.copy(topic = Classifier.fromText(t.first + " " + t.second))
+                            } else {
+                                translated
+                            }
+                        }
+                    }
+                )
+            }
+            _state.value = _state.value.copy(translating = false)
+        }
+    }
+
+    /** Restituisce null se il feed funziona, altrimenti il messaggio da mostrare. */
+    suspend fun addCustomSource(name: String, url: String, lang: String): String? {
+        val clean = url.trim().let { if (it.startsWith("http")) it else "https://$it" }
+        val probe = NewsRepository.test(clean) ?: return "Nessun articolo trovato a questo indirizzo."
+        val label = name.trim().ifBlank { probe.take(28) }
+        prefs.addCustom(
+            Source(
+                id = "custom-" + clean.hashCode(),
+                name = label,
+                url = clean,
+                category = "Le mie fonti",
+                lang = lang,
+                custom = true
+            )
+        )
+        refresh()
+        return null
+    }
+
+    fun removeCustomSource(id: String) {
+        viewModelScope.launch {
+            prefs.removeCustom(id)
+            refresh()
+        }
+    }
+}
