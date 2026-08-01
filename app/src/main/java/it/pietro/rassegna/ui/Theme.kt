@@ -12,30 +12,37 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
+// Blu inchiostro (#1C3D63): la stessa famiglia del blu notte del marchio,
+// alzata di tono perche' si legga come blu e non come nero.
+// Il corallo resta l'accento unico e compare solo nel simbolo del logo.
 private val LightColors = lightColorScheme(
-    primary = Color(0xFF14303C),
-    onPrimary = Color(0xFFF7F7F5),
-    secondary = Color(0xFF5B6B72),
-    background = Color(0xFFFBFAF8),
-    onBackground = Color(0xFF11171A),
-    surface = Color(0xFFFFFFFF),
-    onSurface = Color(0xFF11171A),
-    surfaceVariant = Color(0xFFEDEEEC),
-    onSurfaceVariant = Color(0xFF4A5459),
-    outlineVariant = Color(0xFFDDE0DE)
+    primary = Color(0xFF1C3D63),
+    onPrimary = Color(0xFFF5F1E8),
+    secondary = Color(0xFF566274),
+    tertiary = Color(0xFFFF6A41),
+    onTertiary = Color(0xFF2B0F06),
+    background = Color(0xFFFDFBF6),
+    onBackground = Color(0xFF16202E),
+    surface = Color(0xFFF5F1E8),
+    onSurface = Color(0xFF16202E),
+    surfaceVariant = Color(0xFFEBE5D8),
+    onSurfaceVariant = Color(0xFF566274),
+    outlineVariant = Color(0xFFE2DBCB)
 )
 
 private val DarkColors = darkColorScheme(
-    primary = Color(0xFF8FBDC9),
-    onPrimary = Color(0xFF0B1418),
-    secondary = Color(0xFF9DAAB0),
-    background = Color(0xFF0E1214),
-    onBackground = Color(0xFFEDEFEE),
-    surface = Color(0xFF161C1F),
-    onSurface = Color(0xFFEDEFEE),
-    surfaceVariant = Color(0xFF222A2E),
-    onSurfaceVariant = Color(0xFFB3BEC3),
-    outlineVariant = Color(0xFF2C3438)
+    primary = Color(0xFF9DBEE4),
+    onPrimary = Color(0xFF0E1B2B),
+    secondary = Color(0xFFA9B4C2),
+    tertiary = Color(0xFFFF8A66),
+    onTertiary = Color(0xFF2B0F06),
+    background = Color(0xFF101822),
+    onBackground = Color(0xFFE9EBEF),
+    surface = Color(0xFF18212D),
+    onSurface = Color(0xFFE9EBEF),
+    surfaceVariant = Color(0xFF212C3A),
+    onSurfaceVariant = Color(0xFFA9B4C2),
+    outlineVariant = Color(0xFF2B3644)
 )
 
 private val AppTypography = Typography(

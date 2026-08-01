@@ -173,11 +173,11 @@ private fun ArticleWebView(document: String, baseUrl: String) {
 private object ReaderPage {
 
     fun build(ui: ReaderUi, dark: Boolean, fontStep: Int): String {
-        val bg = if (dark) "#0E1214" else "#FBFAF8"
-        val ink = if (dark) "#EDEFEE" else "#11171A"
-        val muted = if (dark) "#B3BEC3" else "#4A5459"
-        val accent = if (dark) "#8FBDC9" else "#14303C"
-        val hair = if (dark) "#2C3438" else "#DDE0DE"
+        val bg = if (dark) "#101822" else "#FDFBF6"
+        val ink = if (dark) "#E9EBEF" else "#16202E"
+        val muted = if (dark) "#A9B4C2" else "#566274"
+        val accent = if (dark) "#9DBEE4" else "#1C3D63"
+        val hair = if (dark) "#2B3644" else "#E2DBCB"
         val size = 17 + fontStep * 1.5
 
         val title = escape(if (ui.translated) ui.article.shownTitle else ui.article.title)

@@ -1,6 +1,7 @@
 package it.pietro.rassegna.ui
 
 import android.text.format.DateUtils
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -54,12 +56,27 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import it.pietro.rassegna.R
 import it.pietro.rassegna.data.Article
 import it.pietro.rassegna.data.Source
 import it.pietro.rassegna.data.Topic
 import kotlinx.coroutines.launch
+
+/** Proporzioni del logo nella barra: larghezza diviso altezza. */
+private const val RAPPORTO_LOGO = 3.22f
+
+/** "dall'inglese", "dal francese"... la preposizione cambia con la lingua. */
+private fun daLingua(codice: String): String = when (codice) {
+    "en" -> "dall'inglese"
+    "fr" -> "dal francese"
+    "de" -> "dal tedesco"
+    "es" -> "dallo spagnolo"
+    "pt" -> "dal portoghese"
+    else -> "da " + codice.uppercase()
+}
 
 private val LANGUAGES = listOf(
     "it" to "Italiano",
@@ -150,10 +167,22 @@ fun FeedScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(
-                        if (showSaved) "Salvati" else "Rassegna",
-                        style = MaterialTheme.typography.titleMedium
-                    )
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Image(
+                            painter = painterResource(R.drawable.voria_logo),
+                            contentDescription = "Voria",
+                            modifier = Modifier
+                                .height(22.dp)
+                                .aspectRatio(RAPPORTO_LOGO)
+                        )
+                        if (showSaved) {
+                            Text(
+                                "  ·  SALVATI",
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
                 },
                 actions = {
                     IconButton(onClick = { onShowSaved(!showSaved) }) {
@@ -355,18 +384,14 @@ private fun ArticleRow(
             Text(
                 article.sourceName.uppercase(),
                 style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.primary
+                color = MaterialTheme.colorScheme.primary,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.weight(1f, fill = false)
             )
             if (article.publishedAt > 0) {
                 Text(
                     "  ·  " + relativeTime(article.publishedAt),
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-            if (article.isTranslated) {
-                Text(
-                    "  ·  TRADOTTO DA " + article.lang.uppercase(),
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -389,13 +414,20 @@ private fun ArticleRow(
             )
         }
         if (article.isTranslated) {
-            Spacer(Modifier.height(6.dp))
-            Text(
-                if (showOriginal) "Mostra la traduzione" else "Mostra l'originale",
-                style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.clickable { showOriginal = !showOriginal }
-            )
+            Spacer(Modifier.height(8.dp))
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    "Tradotto " + daLingua(article.lang),
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Text(
+                    "  ·  " + (if (showOriginal) "Mostra la traduzione" else "Mostra l'originale"),
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.clickable { showOriginal = !showOriginal }
+                )
+            }
         }
       }
       if (saving) {

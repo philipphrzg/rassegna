@@ -13,6 +13,7 @@ object Catalog {
         Source("rep-home", "Repubblica", "https://www.repubblica.it/rss/homepage/rss2.0.xml", "Prima pagina"),
         Source("cds-home", "Corriere della Sera", "https://xml2.corriereobjects.it/rss/homepage.xml", "Prima pagina"),
         Source("fatto", "Il Fatto Quotidiano", "https://www.ilfattoquotidiano.it/feed/", "Prima pagina"),
+        Source("indipendente", "L'Indipendente", "https://www.lindipendente.online/feed/", "Prima pagina"),
 
         // Italia
         Source("ansa-cronaca", "ANSA Cronaca", "https://www.ansa.it/sito/notizie/cronaca/cronaca_rss.xml", "Italia", topic = Topic.CRONACA),
@@ -59,6 +60,7 @@ object Catalog {
         // Scienza
         Source("ansa-scienza", "ANSA Scienza", "https://www.ansa.it/sito/notizie/scienza/scienza_rss.xml", "Scienza", topic = Topic.SCIENZA),
         Source("lescienze", "Le Scienze", "https://www.lescienze.it/rss/all/rss2.0.xml", "Scienza", topic = Topic.SCIENZA),
+        Source("natgeo-it", "National Geographic Italia", "https://www.nationalgeographic.it/feed", "Scienza", topic = Topic.SCIENZA),
         Source("nature-news", "Nature News", "https://www.nature.com/nature.rss", "Scienza", "en", topic = Topic.SCIENZA),
         Source("newscientist", "New Scientist", "https://www.newscientist.com/feed/home/", "Scienza", "en", topic = Topic.SCIENZA),
 

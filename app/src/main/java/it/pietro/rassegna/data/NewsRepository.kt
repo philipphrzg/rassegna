@@ -15,13 +15,23 @@ data class FeedResult(
 
 object NewsRepository {
 
-    private const val AGENT = "Rassegna/1.0 (Android)"
+    /**
+     * Molti siti dietro un servizio di protezione rifiutano le richieste che non
+     * arrivano da un browser: con un'identificazione generica rispondevano 403 e
+     * la fonte risultava "non raggiungibile" pur essendo perfettamente viva.
+     */
+    private const val AGENT =
+        "Mozilla/5.0 (Linux; Android 13) AppleWebKit/537.36 (KHTML, like Gecko) " +
+            "Chrome/120.0.0.0 Mobile Safari/537.36"
 
     suspend fun load(sources: List<Source>): FeedResult = coroutineScope {
         if (sources.isEmpty()) return@coroutineScope FeedResult(emptyList(), emptyList())
 
         val results = sources.map { source ->
-            async(Dispatchers.IO) { source to fetch(source) }
+            async(Dispatchers.IO) {
+                // un secondo tentativo copre i cali momentanei di un server
+                source to (fetch(source) ?: fetch(source))
+            }
         }.awaitAll()
 
         val articles = results.flatMap { it.second ?: emptyList() }
@@ -39,17 +49,20 @@ object NewsRepository {
         var connection: HttpURLConnection? = null
         return try {
             connection = (URL(source.url).openConnection() as HttpURLConnection).apply {
-                connectTimeout = 12000
-                readTimeout = 12000
+                connectTimeout = 15000
+                readTimeout = 15000
                 instanceFollowRedirects = true
                 setRequestProperty("User-Agent", AGENT)
                 setRequestProperty("Accept", "application/rss+xml, application/xml, text/xml, */*")
+                setRequestProperty("Accept-Language", "it-IT,it;q=0.9,en;q=0.8")
             }
             val code = connection.responseCode
             if (code in 301..308) {
                 val location = connection.getHeaderField("Location") ?: return null
                 connection.disconnect()
-                return fetch(source.copy(url = location), redirects + 1)
+                // alcuni server rispondono con un indirizzo relativo
+                val assoluto = URL(URL(source.url), location).toString()
+                return fetch(source.copy(url = assoluto), redirects + 1)
             }
             if (code != HttpURLConnection.HTTP_OK) return null
             connection.inputStream.use { stream ->
