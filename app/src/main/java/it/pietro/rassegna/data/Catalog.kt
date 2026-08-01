@@ -9,7 +9,6 @@ object Catalog {
     val sources: List<Source> = listOf(
         // Prima pagina
         Source("ansa-home", "ANSA", "https://www.ansa.it/sito/ansait_rss.xml", "Prima pagina"),
-        Source("post", "Il Post", "https://www.ilpost.it/feed/", "Prima pagina"),
         Source("rep-home", "Repubblica", "https://www.repubblica.it/rss/homepage/rss2.0.xml", "Prima pagina"),
         Source("cds-home", "Corriere della Sera", "https://xml2.corriereobjects.it/rss/homepage.xml", "Prima pagina"),
         Source("fatto", "Il Fatto Quotidiano", "https://www.ilfattoquotidiano.it/feed/", "Prima pagina"),
@@ -58,9 +57,6 @@ object Catalog {
         Source("techcrunch", "TechCrunch", "https://techcrunch.com/feed/", "Tecnologia", "en", topic = Topic.TECNOLOGIA),
 
         // Scienza
-        Source("ansa-scienza", "ANSA Scienza", "https://www.ansa.it/sito/notizie/scienza/scienza_rss.xml", "Scienza", topic = Topic.SCIENZA),
-        Source("lescienze", "Le Scienze", "https://www.lescienze.it/rss/all/rss2.0.xml", "Scienza", topic = Topic.SCIENZA),
-        Source("natgeo-it", "National Geographic Italia", "https://www.nationalgeographic.it/feed", "Scienza", topic = Topic.SCIENZA),
         Source("nature-news", "Nature News", "https://www.nature.com/nature.rss", "Scienza", "en", topic = Topic.SCIENZA),
         Source("newscientist", "New Scientist", "https://www.newscientist.com/feed/home/", "Scienza", "en", topic = Topic.SCIENZA),
 
@@ -69,7 +65,6 @@ object Catalog {
         Source("tascabile", "Il Tascabile", "https://www.iltascabile.com/feed/", "Cultura e idee", topic = Topic.CULTURA),
         Source("doppiozero", "Doppiozero", "https://www.doppiozero.com/rss.xml", "Cultura e idee", topic = Topic.CULTURA),
         Source("aeon", "Aeon", "https://aeon.co/feed.rss", "Cultura e idee", "en", topic = Topic.CULTURA),
-        Source("lrb", "London Review of Books", "https://www.lrb.co.uk/feeds/rss", "Cultura e idee", "en", topic = Topic.CULTURA),
         Source("dailynous", "Daily Nous (filosofia)", "https://dailynous.com/feed/", "Cultura e idee", "en", topic = Topic.CULTURA),
         Source("nybooks", "New York Review of Books", "https://www.nybooks.com/feed/", "Cultura e idee", "en", topic = Topic.CULTURA),
 
@@ -79,12 +74,10 @@ object Catalog {
 
         // Sport
         Source("gazzetta", "Gazzetta dello Sport", "https://www.gazzetta.it/rss/home.xml", "Sport", topic = Topic.SPORT),
-        Source("ansa-sport", "ANSA Sport", "https://www.ansa.it/sito/notizie/sport/sport_rss.xml", "Sport", topic = Topic.SPORT),
-        Source("spaziociclismo", "SpazioCiclismo", "https://www.spaziociclismo.it/feed/", "Sport", topic = Topic.SPORT),
-        Source("cyclingnews", "Cyclingnews", "https://www.cyclingnews.com/rss/news/", "Sport", "en", topic = Topic.SPORT)
+        Source("ansa-sport", "ANSA Sport", "https://www.ansa.it/sito/notizie/sport/sport_rss.xml", "Sport", topic = Topic.SPORT)
     )
 
-    val defaultSelection: Set<String> = setOf("ansa-home", "post")
+    val defaultSelection: Set<String> = setOf("ansa-home", "rep-home")
 
     fun byId(id: String): Source? = sources.firstOrNull { it.id == id }
 }

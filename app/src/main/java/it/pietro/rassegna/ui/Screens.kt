@@ -56,6 +56,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -64,6 +65,11 @@ import it.pietro.rassegna.data.Article
 import it.pietro.rassegna.data.Source
 import it.pietro.rassegna.data.Topic
 import kotlinx.coroutines.launch
+
+/* I dati mostrati in fondo alla schermata delle fonti. */
+private val SVILUPPATORE = "Pietro"
+private val CONTATTO = ""          // email o sito; se vuoto la riga non compare
+private val NOTA_AUTORE = ""       // una riga libera; se vuota non compare
 
 /** Proporzioni del logo nella barra: larghezza diviso altezza. */
 private const val RAPPORTO_LOGO = 3.22f
@@ -172,7 +178,7 @@ fun FeedScreen(
                             painter = painterResource(R.drawable.voria_logo),
                             contentDescription = "Voria",
                             modifier = Modifier
-                                .height(22.dp)
+                                .height(26.dp)
                                 .aspectRatio(RAPPORTO_LOGO)
                         )
                         if (showSaved) {
@@ -516,6 +522,7 @@ fun SourcesScreen(
                 HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
             }
             sourceList(sources, selected, onToggle, onRemoveCustom)
+            item(key = "colophon") { Colophon() }
         }
     }
 
@@ -523,6 +530,60 @@ fun SourcesScreen(
         AddSourceDialog(
             onDismiss = { showDialog = false },
             onAdd = onAddCustom
+        )
+    }
+}
+
+/** Chi ha fatto l'app e quale versione stai usando. */
+@Composable
+private fun Colophon() {
+    val context = LocalContext.current
+    val versione = remember {
+        try {
+            context.packageManager.getPackageInfo(context.packageName, 0).versionName ?: "—"
+        } catch (e: Exception) {
+            "—"
+        }
+    }
+
+    Column(Modifier.padding(20.dp, 32.dp, 20.dp, 8.dp)) {
+        HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+        Spacer(Modifier.height(20.dp))
+        Text(
+            "SVILUPPATORE",
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.primary
+        )
+        Spacer(Modifier.height(6.dp))
+        Text(SVILUPPATORE, style = MaterialTheme.typography.titleMedium)
+        if (CONTATTO.isNotBlank()) {
+            Spacer(Modifier.height(2.dp))
+            Text(
+                CONTATTO,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+        if (NOTA_AUTORE.isNotBlank()) {
+            Spacer(Modifier.height(8.dp))
+            Text(
+                NOTA_AUTORE,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+        Spacer(Modifier.height(14.dp))
+        Text(
+            "Voria, versione " + versione,
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Spacer(Modifier.height(4.dp))
+        Text(
+            "Le notizie appartengono alle testate che le pubblicano. " +
+                "Voria mostra i loro feed pubblici e rimanda sempre all'articolo originale.",
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
     }
 }
